@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent">
+
+    <!-- Os comandos "android:layout_widht e laytout_height" servem como um adaptador para os diferentes tamanhos de tela, quando igualados a zero "0" se adaptam a telas de dimensões diferentes, no caso telas maiores e menores -->
+    <!-- O comando app:layoutManager... serve para organizar os itens do recyclerView em Grade -->
+    <!-- Já o comando spanCount serve para falar em quantos itens o Grade vai ser divida, no caso em 4, caso esse número for alterado o número de itens na horinzontal também vão ser diferentes -->
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:id="@+id/appList"
+
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

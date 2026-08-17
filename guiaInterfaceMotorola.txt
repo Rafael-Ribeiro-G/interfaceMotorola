@@ -1,0 +1,60 @@
+então gemini, vc vai me ajudar a desenvolver uma interface para o meu celular motorola, o objetivo é substituit a interface que já vem de fábrica do motorola, e além disso fazer uma que seja leve e que não trave mas assim gemini, eu n queria q vc fizesse tudo eu queria q vc me explicasse como fazer pra eu aprender a mexer e ir desenvolvendo e entendendo oq eu estou fazendo, e se caso eu precisasse de ajuda te pediria e então você me falasse o que fazer iou mexer alguma coisa no código
+
+
+
+CRIAÇÃO DA INTERFACE:
+
+A primeira etapa da criação da minha própria interface gráfica para o meu celular Motorola é a alteração do AndroidManifest, ele funciona como um guia para tudo o que vai ter dentro da interface gráfica. Para começar esse projeto primeiro é necessário acessar esse arquivo e alterar, colocando os scripts: 
+
+"<category android:name = "android.intent.category.HOME" />"
+"<category android:name = "android.intent.category.LAUNCHER" />
+
+Esses sripts são responsáveis por "declarar" que esse código será a tela inicial (HOME) e que assim que o celular inciado ele abra automaticamente a interface (LAUNCHER). Ademais também foi adicionado o script: 
+
+"<category anroid:name = "android.intent.category.DEFAULT" />"
+
+Esse script serve para informar ao Android que ele é o candidato principal de abertura, no caso ele vai aparecer na lista de aplicativos que podem abrir a página inicial.
+
+RecyclerView:
+Ele fuciona como um reciclador de ícones, ao invpes de eu ter os ícones de todos os aplicativos na tela, eu tenho apenas 10 e conforme vou descendo a tela eles vão se alterando para os ícones dos aplicativos que vão aparecer, além disso é necessário ancorar o recyclerView em toda a tela, para que ele fique preso e proiba ele de mostrar os ícones ou o próprio recyclerView aparecer em lugares aleatórios da tela.
+
+Agora irei utilizar o script: "app:layoutManager="androidx.recyclerview.widget.GridLayoutManager", para organizar os itens, o que seria os ícones dos aplicativos em uma grade horizontal e vertical ao invés de ser apenas uma lista na vertical com todos os 10 itens. Junto disso também será utilizado o script "app:spanCount = "4" para dividir esse itens em 4 colunas, se o número do spanCount for alterado a quantidade de colunas também vai ser alterada, ele seria o responsável pelo ajuste visual da interface gráfica.
+
+O comando "android:id" é responsável por dar um nome (id) para a tela.
+
+Para resolver o problema de celulares pequenos ou grandes, irei usar os scripts: "android:layout_width="0dp"" e "android:layout_height="0dp"" eles vão servir para a interface se redimensionar automaticamente conforme o tamanho do celular, no caso vão se adaptar para a tela de diferentes celulares.
+
+Agora que o recylerView foi arrumado e configurado para aparecer de forma correta em grade, a próxima etapa é criar um "ícone" de exemplo para o recyclerView entender como ele deve mostrar os itens conforme a rolagem. Para realizar isso criei um outro "Layout Resource File" chamado "item_app" nele vai conter um ícone exemplo para o recyclerView. Dentro desse arquivo que fica no caminho "res/layout" vai ter dois componentes, sendo elas: imageView e textView, para que cada cumpra as suas respectivas funções, no caso imagem (ícone de forma gráfica) e texto (nome do aplicativo). 
+
+LinearLayout:
+
+Alinha o texto e o ícone em grades, o que impossibilita o recyclerView de quando for imprimir eles na tela, serem colocados distantes ou até mesmo nos lugares errados e acabar provocando erros quando os próximos ícones acontecerem conforme a rolagem da tela. Para solucionar esse problema irei usar o LinearLayout (vertical), para que os ícones e texto fiquem organizados um acima do outro.
+
+Match_parent vs Wrap_content:
+
+Match_parent é responsável por preencher/ocupar toda a tela tanto vertical com horizontal. Impossibilitando assim que outros componentes que deveriam estar ne tela sejam expulsos para fora.
+Wrap_content é responsável por preencher/ocupar o mínimo possível dentro da tela até que ele caiba totalmente.
+
+Além disso para evitar possíveis problemas de tamanho diferentes entre ícones, o tamanho deles será travado verticalmente e horizontalmente em 56dp padronizando assim o tamanho dos ícones de diferentes aplicativos, o que deixa até mesmo mais bonito visualmente falando. Ademais quando você decide um tamanho fixo para os ícones do aplicativo diminui a chance do processador/celular travar, uma vez que não é necessário que ele faça os cálculos de "padronização" dos aplicativos.
+
+dp é uma medida que o Android usa para que os ícones tenham o mesmo tamanho em telas grandes ou pequenos melhorando visualmente a interface e possibilitando a padronização da mesma.
+
+Também irei usar o "android:layout_gravity:"center"" (alinha a si próprio dentro do seu "pai") para alinhar a imagem e o texto (os dois componentes presentes do item_app.xml, horizontalmente), o comando "android:textAlignment:"center"" serve para fazer um alinhamento na direção horizontal. Já o "android:gravity="center"" alinha tudo o que estiver dentro dele de maneira horizontal e vertical.
+
+Agora que a parte gráfica/visual da interface ficou pronta, vou prosseguir incrementando a lógica para a interface e suas possíveis funcionalidades. A lógica vai ter 3 pontos principais sendo elas: buscar (Pesquisa dentro do Android todos os aplicativos que estão instalados dentro do celular), organizar (Pega a lista de ícones e nomes e organiza eles) e mostrar (Mostra/injeta esse ícones e textos dentro da grade criada).
+
+Para que a interface funcione de forma leve será necessário três peças importantes no Java.
+
+O primeiro passo é criar uma "ficha cadastral" para os aplicativos, dessa maneira a interface vai conseguir saber qual aplicativo está sendo acessado e assim coletar as informações que estão armazenadas neles. Para isso será necessário criar uma nova classe Java para poder fazer esse trabalho de "ficha cadastral". 
+
+Para que o Java possa entender quando se trata de um ícone irei usar a importação de uma ferramenta chamada "Drawable", essa ferramenta é a que o Android usa para tudo aquilo que for desenhado, como por exemplo um ícone, que é o caso da nossa aplicação.
+
+No Android o ponto de início (ponto de partida) é sempre o MainActivity e o que faz funcionar é o "onCreate" (comando que inicia tudo) que tem nele, por isso não é necessário de main em programação Java para Android.
+
+Para a "requisição" das informações dos aplicativos com a nova classe criada, criei três variáveis para realizar essa análise, sendo elas: String label (Essa variável vai guardar tudo aquilo que for texto e pertencer ao nome do Aplicativo Ex:. WhatsApp), String packageName (Essa variável vai ser responsável por guardar o "ID" do Aplicativo) e Drawable icon (será responsável por apresentar na interface gráfica os ícones dos aplicativos, seria uma biblioteca a parte que pode ser manipulada pelo Android).
+
+A próxima etapa é criar um construtor logo após as variáveis, ele vai servir para preencher os dados necessários de cada Aplicativo, que seriam: Nome, ID e ícone. No caso ele vai pedir as informações de cada aplicativo para poder encontrar ele e abrir/aparecer na interface do celular. O "this" está sendo utilizado para que o Java não se confunda.
+
+Para o Java é necessário sempre falar qual tipo de dado vai chegar antes de dar o nome à ele, como no caso da interface gráfica, quando criamos cada variável primeiro, colocamos de qual tipo ele vai ser - Ex:. String - para depois adicionarmos o nome dele - Ex:. label -.
+
+A próxima etapa da Interface é criar uma nova Java Class, que vai servir com um "organizador" de todos os outros arquivos. De forma simples, essa nova Java Class que será chamada de "AppAdapter" vai pegar os dados do aplicativo, colocar ele em formato de ícone e nome e estampá-lo na Grade. 
