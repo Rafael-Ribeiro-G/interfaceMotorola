@@ -16,7 +16,7 @@ Esses sripts são responsáveis por "declarar" que esse código será a tela ini
 Esse script serve para informar ao Android que ele é o candidato principal de abertura, no caso ele vai aparecer na lista de aplicativos que podem abrir a página inicial.
 
 RecyclerView:
-Ele fuciona como um reciclador de ícones, ao invpes de eu ter os ícones de todos os aplicativos na tela, eu tenho apenas 10 e conforme vou descendo a tela eles vão se alterando para os ícones dos aplicativos que vão aparecer, além disso é necessário ancorar o recyclerView em toda a tela, para que ele fique preso e proiba ele de mostrar os ícones ou o próprio recyclerView aparecer em lugares aleatórios da tela.
+Ele fuciona como um reciclador de ícones, ao invés de eu ter os ícones de todos os aplicativos na tela, eu tenho apenas 10 e conforme vou descendo a tela eles vão se alterando para os ícones dos aplicativos que vão aparecer, além disso é necessário ancorar o recyclerView em toda a tela, para que ele fique preso e proíba ele de mostrar os ícones ou o próprio recyclerView aparecer em lugares aleatórios da tela.
 
 Agora irei utilizar o script: "app:layoutManager="androidx.recyclerview.widget.GridLayoutManager", para organizar os itens, o que seria os ícones dos aplicativos em uma grade horizontal e vertical ao invés de ser apenas uma lista na vertical com todos os 10 itens. Junto disso também será utilizado o script "app:spanCount = "4" para dividir esse itens em 4 colunas, se o número do spanCount for alterado a quantidade de colunas também vai ser alterada, ele seria o responsável pelo ajuste visual da interface gráfica.
 
@@ -57,4 +57,18 @@ A próxima etapa é criar um construtor logo após as variáveis, ele vai servir
 
 Para o Java é necessário sempre falar qual tipo de dado vai chegar antes de dar o nome à ele, como no caso da interface gráfica, quando criamos cada variável primeiro, colocamos de qual tipo ele vai ser - Ex:. String - para depois adicionarmos o nome dele - Ex:. label -.
 
-A próxima etapa da Interface é criar uma nova Java Class, que vai servir com um "organizador" de todos os outros arquivos. De forma simples, essa nova Java Class que será chamada de "AppAdapter" vai pegar os dados do aplicativo, colocar ele em formato de ícone e nome e estampá-lo na Grade. 
+A próxima etapa da Interface é criar uma nova Java Class, que vai servir com um "organizador" de todos os outros arquivos. De forma simples, essa nova Java Class que será chamada de "AppAdapter" vai pegar os dados do aplicativo, colocar ele em formato de ícone e nome e estampá-lo na Grade. Essa classe também vai ser a responsável por conversar com o "recyclerView"
+
+Para conseguir fazer essa conexão entre o "recyclerView" e o "AppAdapter" usarei o "extends" na public class para que o "AppAdapter" siga as regras de funcionamento do "recyclerView". Além disso também irei usar um "ajudante" chamado "ViewHolder" que vai servir para manter as peças (ícone e nome do aplicativo) dentro do layout.
+
+Para que os aplicativos fiquem armazenados em uma lista usarei o comando "List<AppInfo> appsList, ele é uma lista que vai mostrar quais aplicativos vão ser mostrados.
+
+Também criei um construtor que será utilizado para receber a lista de todos os aplicativos que estão sendo chamado pelo comando anterior ("List<AppInfo> appsList").
+
+Após realizar esse comandos criei uma outra public class para o ViewHolder que também vai obedecer as regras ditas pelo RecyclerView, dentro disso criei as variáveis que chamam o ícone e nome do aplicativo, da maneira já elaborada antes, primeiro escrevendo o tipo dela e depois colocando o nome. Após isso criei um construtor para o ViewHolder com um itemView que vai ser o responsável por manter o ícone e nome do aplicativo juntos. Depois adicionei um "super(itemView)" que terá a responsabilidade de se referir a classe pai e eles juntos indicam que agora os aplicativos fazer parte da reciclagem de itens do sistema/interface. Para finalizar esse construtor chamei novamente as variáveis pelos seus respectivos nomes, mas agora incluí o itemView e avisei que ele procurasse as informações necessárias pelo ID que receberam.
+
+Para pedir a lista de aplicativos irei usar um componente chamado "packageManager" que vai ser adicionado dentro do MainActivity.java, de forma simples e básica ele vai fazer a função de um bibliotecário.
+
+o PackageManager funciona como se fosse um detetive, ele vai vasculhar tudo aquilo que ele tiver acesso para tentar encontrar aplicativos que tenham uma porta de entrada (Intent.ACTION_MAIN).
+
+
