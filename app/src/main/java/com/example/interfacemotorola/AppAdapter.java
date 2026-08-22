@@ -1,5 +1,6 @@
 package com.example.interfacemotorola;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,18 @@ public class AppAdapter extends RecyclerView.Adapter <AppAdapter.ViewHolder> {
 
         //Adiciona o ícone do aplicativo no ImageView (Utilizamos o Drawable por se tratar de um fator que é desenhavel)
         Holder.iconeApp.setImageDrawable(app.icon);
+
+        //Essa função abaixo vai fazer com que o Launcher/Interface seja capaz de abrir os aplicativos assim que eles forem clicados.
+        //Adiciona a escuta do clique
+        Holder.itemView.setOnClickListener(v -> {
+            //Cria o caminho para abrir o aplicativo usando o ID (packageName) dele
+            Intent intent = v.getContext().getPackageManager().getLaunchIntentForPackage(app.packageName);
+
+            //Se o Android encontrar o aplicativo ele vai abrir
+            if (intent != null) {
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     //Esse construtor vai servir para receber a lista de aplicativos que vão ser mostrados, no caso ele chama todos os aplicativos que estão dentro da lista, que automaticamente são todos os palicativos instalados dentro do celular.

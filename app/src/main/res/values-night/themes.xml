@@ -1,7 +1,16 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Base application theme. -->
     <style name="Base.Theme.InterfaceMotorola" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!--As funções/códigos abaixo vão servir para fazer as configurações de janela. Elas são responsáveis por alterar como o Android desenha o aplicativo na tela-->
+
+        <!--A linha abaixo vai ser responsável por mostrar o meu papel de parede na tela-->
+        <item name = "android:windowShowWallpaper">true</item>
+
+        <!--Já essa linha faz com que se caso tiver uma "tela" na frente do meu papel de parede ela fique transparente-->
+        <item name = "android:windowBackground">@android:color/transparent</item>
     </style>
+
+    <style name="Theme.InterfaceMotorola" parent="Base.Theme.InterfaceMotorola" />
 </resources>
