@@ -2,14 +2,18 @@ package com.example.interfacemotorola;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //Essa public class tá criada com o extends para poder obedecer, as regras impostas pelo "RecyclerView", além disso, também está sendo usado o "ViewHolder", para mostrar os ícones e nomes dos aplicativos da maneira que foi esquematizada, além de manter dentro do nosso layout.
@@ -21,13 +25,38 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //Esse comando vai servir para chamar a lista de todos os aplicativos e guarda-lós até que eles sejam apresentados na tela.
     List<List<AppInfo>> appsList;
     List<AppInfo> todosOsApps;
+    List<AppInfo> listaFiltradaGaveta; // Lista dinâmica utilizada para a busca de aplicativos
     Context context;
+
+    // Guarda a referência do adapter interno da gaveta para atualizar sem destruir o EditText
+    private ItemAdapter gavetaInnerAdapter;
 
     //Esse construtor vai servir para receber a lista de aplicativos que vão ser mostrados
     public AppAdapter(Context context, List<List<AppInfo>> appsList, List<AppInfo> todosOsApps) {
         this.context = context;
         this.appsList = appsList;
         this.todosOsApps = todosOsApps;
+        this.listaFiltradaGaveta = new ArrayList<>(todosOsApps); // Inicializa com todos os apps
+    }
+
+    // Método para filtrar os aplicativos da Gaveta em tempo real
+    public void filtrarGaveta(String texto) {
+        listaFiltradaGaveta.clear();
+        if (texto.isEmpty()) {
+            listaFiltradaGaveta.addAll(todosOsApps);
+        } else {
+            String busca = texto.toLowerCase().trim();
+            for (AppInfo app : todosOsApps) {
+                if (app.label != null && app.label.toLowerCase().contains(busca)) {
+                    listaFiltradaGaveta.add(app);
+                }
+            }
+        }
+
+        // Atualiza apenas a grade interna da gaveta, sem recriar o EditText
+        if (gavetaInnerAdapter != null) {
+            gavetaInnerAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -64,9 +93,13 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (getItemViewType(position) == TYPE_GAVETA) {
             GavetaViewHolder gHolder = (GavetaViewHolder) holder;
             if (gHolder.recyclerViewGaveta != null) {
-                // Aplica a grade de 4 colunas na RecyclerView da gaveta
+                // Aplica a grade de 4 colunas na RecyclerView da gaveta usando a lista filtrada
                 gHolder.recyclerViewGaveta.setLayoutManager(new GridLayoutManager(context, 4));
-                ItemAdapter gavetaInnerAdapter = new ItemAdapter(todosOsApps, true);
+
+                // Reaproveita o mesmo adapter interno em vez de instanciar um novo toda vez
+                if (gavetaInnerAdapter == null) {
+                    gavetaInnerAdapter = new ItemAdapter(listaFiltradaGaveta, true);
+                }
                 gHolder.recyclerViewGaveta.setAdapter(gavetaInnerAdapter);
             }
         } else {
@@ -89,13 +122,31 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    // Atualize o GavetaViewHolder para buscar a RecyclerView pelo ID do XML
+    // Atualize o GavetaViewHolder para buscar a RecyclerView e a barra de busca pelo ID do XML
     public class GavetaViewHolder extends RecyclerView.ViewHolder {
         RecyclerView recyclerViewGaveta;
+        EditText etBuscaGaveta;
 
         public GavetaViewHolder(View itemView) {
             super(itemView);
             recyclerViewGaveta = itemView.findViewById(R.id.recyclerGavetaPagina);
+            etBuscaGaveta = itemView.findViewById(R.id.etBuscaGaveta);
+
+            // Escuta cada letra digitada na caixa de texto para filtrar a lista
+            if (etBuscaGaveta != null) {
+                etBuscaGaveta.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        filtrarGaveta(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+            }
         }
     }
 

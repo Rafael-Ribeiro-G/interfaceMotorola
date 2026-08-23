@@ -3,16 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#1E1E1E">
+    android:background="#1E1E1E"
+    android:paddingTop="48dp">
 
-    <!-- A lista vertical de apps da gaveta -->
+    <EditText
+        android:id="@+id/etBuscaGaveta"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@android:color/white"
+        android:hint="Pesquisar aplicativos..."
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#000000"
+        android:textColorHint="#757575"
+        android:textSize="14sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerGavetaPagina"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:nestedScrollingEnabled="true"
-        android:paddingTop="48dp"
         android:paddingBottom="24dp" />
 
 </LinearLayout>
