@@ -32,6 +32,15 @@ public class AppAdapter extends RecyclerView.Adapter <AppAdapter.ViewHolder> {
         //Esse comando vai ser responsável por transformar o meu arquivo XML em uma view que pode ser acessada pelo ViewHolderç
         View view = inflater.inflate(R.layout.item_app, parent, false);
 
+        //Cálculo da largura da tela e dividido por 4
+        int width = parent.getMeasuredWidth() / 4;
+
+        //Cálcula a altura da tela e dividi por 5
+        int heigth = parent.getMeasuredHeight() / 5;
+
+        //Aplica esse tamanho no quadro do app
+        view.setLayoutParams(new ViewGroup.LayoutParams(width, heigth));
+
         //Este comando devolve a view dentro do ViewHolder.
         return new ViewHolder(view);
     }

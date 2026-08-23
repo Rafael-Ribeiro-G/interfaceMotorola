@@ -10,23 +10,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.viewpager2.widget.ViewPager2;
-
 public class MainActivity extends AppCompatActivity {
 
-
     //O primeiro passo é criar todas as variáveis que vamos precisar chamar futuramente.
-    ViewPager2 viewPager; //É a estante do nosso XML
+    RecyclerView recyclerView; //É a estante do nosso XML
     List<AppInfo> appsList; //É a lista onde vai estar presente todos os aplicativos instalados no celular.
     AppAdapter adapter; //É o responsável por estampar o ícone e nome do aplicativo.
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +30,20 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        viewPager = findViewById(R.id.viewPager);
+        //Essa função vai funcionar
+        recyclerView = findViewById(R.id.appList);
 
-        // REMOVA as linhas: .setHasFixedSize, .setItemViewCacheSize, etc.
-        // O ViewPager2 gerencia a memória de um jeito diferente e automático.
+        // Otimizações para a rolagem não travar
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(40);
 
-        appsList = new ArrayList<>();
+        //Cria a grade com 5 linhas
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 5, GridLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        //Permite que a página trave no lugar certo
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
 
         //Essa função vai ter a função de
         appsList = new ArrayList<>();
@@ -52,31 +56,37 @@ public class MainActivity extends AppCompatActivity {
 
         //A função abaixo está sendo utilizada para fazer a buscagem/pesquisa dos aplicativos.
         pegarApps();
-
     }
 
-        //A função abaixo vai ter a responsabilidade de buscar os aplicativos.
-        private void pegarApps() {
-            //Busca todos os aplicativos que tenham função de "ACTION_MAIN", no caso seria a página inicial so aplicativo, quando abre é a primeira coisa que aparece na tela.
-            Intent intent = new Intent(Intent.ACTION_MAIN, null);
+    //A função abaixo vai ter a responsabilidade de buscar os aplicativos.
+    private void pegarApps() {
+        //Busca todos os aplicativos que tenham função de "ACTION_MAIN", no caso seria a página inicial so aplicativo, quando abre é a primeira coisa que aparece na tela.
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
 
-            //É quem vai fazer o pedido do aplicativo para aparecer na interface e na lista de ícones.
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        //É quem vai fazer o pedido do aplicativo para aparecer na interface e na lista de ícones.
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-            //No comando abaixo vou chamar o get.packageManager para me entregar a lista de aplicativos que ele achou com aquele filtro montado anteriormente.
-            List<ResolveInfo> appsBrutos = getPackageManager().queryIntentActivities(intent, 0);
+        //No comando abaixo vou chamar o get.packageManager para me entregar a lista de aplicativos que ele achou com aquele filtro montado anteriormente.
+        List<ResolveInfo> appsBrutos = getPackageManager().queryIntentActivities(intent, 0);
 
-            //Agora para melhorar o filtro vamos fazer um Loop (for), ele vai criar uma ficha para cada aplicativo.
-            for (ResolveInfo info: appsBrutos) {
-                //Extrair o nome (label)
-                String label = info.loadLabel(getPackageManager()).toString();
-                    String packageName = info.activityInfo.packageName; //Após o "=" a função do comando vai ser procurar pelo endereço único que será usado para encontrar o aplicativo.
-                    Drawable icon = info.loadIcon(getPackageManager()); //Carrega o ícone e envia ele para o packageManager.
-                    appsList.add(new AppInfo(label, packageName, icon));
+        //Garante que a lista comece vazia para não duplicar ícones
+        appsList.clear();
+
+        //Agora para melhorar o filtro vamos fazer um Loop (for), ele vai criar uma ficha para cada aplicativo.
+        for (ResolveInfo info: appsBrutos) {
+            //Extrair o nome (label)
+            String label = info.loadLabel(getPackageManager()).toString();
+            String packageName = info.activityInfo.packageName; //Após o "=" a função do comando vai ser procurar pelo endereço único que será usado para encontrar o aplicativo.
+            Drawable icon = info.loadIcon(getPackageManager()); //Carrega o ícone e envia ele para o packageManager.
+
+            // Filtro para não mostrar o próprio Launcher na lista
+            if (!packageName.equals(getPackageName())) {
+                appsList.add(new AppInfo(label, packageName, icon));
             }
-
-                //Agora irei avisar ao Adapter que a lista já está cheia.
-                adapter = new AppAdapter(appsList); //Avisa ao AppAdapter que a lista já está cheia.
-                viewPager.setAdapter(adapter); //Avisa ao recyclerView que quando for necessário mostrar um ícone é preciso enviar para o adapter.
         }
+
+        //Agora irei avisar ao Adapter que a lista já está cheia.
+        adapter = new AppAdapter(appsList); //Avisa ao AppAdapter que a lista já está cheia.
+        recyclerView.setAdapter(adapter); //Avisa ao recyclerView que quando for necessário mostrar um ícone é preciso enviar para o adapter.
+    }
 }
