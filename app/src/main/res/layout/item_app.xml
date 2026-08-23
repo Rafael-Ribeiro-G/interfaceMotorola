@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:gravity="center"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical"
+    android:padding="4dp">
 
         <ImageView
             android:id="@+id/iconeApp"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
+            android:scaleType="fitCenter"
             app:srcCompat="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/nomeApp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Aplicativo"
-            android:textAlignment="center"
-            android:textSize="14sp"
+            android:layout_marginTop="6dp"
+            android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
-            android:ellipsize="end"/>
-
+            android:text="Aplicativo"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif"
+            />
 
 </LinearLayout>

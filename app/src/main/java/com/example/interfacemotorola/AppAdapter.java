@@ -1,20 +1,27 @@
 package com.example.interfacemotorola;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 //Essa public class tá criada com o extends para poder obedecer, as regras impostas pelo "RecyclerView", além disso, também está sendo usado o "ViewHolder", para mostrar os ícones e nomes dos aplicativos da maneira que foi esquematizada, além de manter dentro do nosso layout.
-public class AppAdapter extends RecyclerView.Adapter <AppAdapter.ViewHolder> {
+public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
     //Esse comando vai servir para chamar a lista de todos os aplicativos e guarda-lós até que eles sejam apresentados na tela.
-    List<AppInfo> appsList;
+    List<List<AppInfo>> appsList;
+    Context context;
+
+    //Esse construtor vai servir para receber a lista de aplicativos que vão ser mostrados, no caso ele chama todos os aplicativos que estão dentro da lista, que automaticamente são todos os palicativos instalados dentro do celular.
+    public AppAdapter(Context context, List<List<AppInfo>> appsList) {
+        this.context = context;
+        this.appsList = appsList;
+    }
 
     //Essa função vai servir para informar para o Android quando a lista acaba.
     @Override
@@ -25,72 +32,85 @@ public class AppAdapter extends RecyclerView.Adapter <AppAdapter.ViewHolder> {
     //Essa função serve para criar a "moldura" para os aplicativos.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        //Esse comando é responsável por transformar o texto em objetos reais, então no caso, ele absorve o texto do arquivo item_app.xml e transforma em objetos reais que podem ser exibidos na tela do celular.
-        LayoutInflater inflater= LayoutInflater.from(parent.getContext());
-
-        //Esse comando vai ser responsável por transformar o meu arquivo XML em uma view que pode ser acessada pelo ViewHolderç
-        View view = inflater.inflate(R.layout.item_app, parent, false);
-
-        //Cálculo da largura da tela e dividido por 4
-        int width = parent.getMeasuredWidth() / 4;
-
-        //Cálcula a altura da tela e dividi por 5
-        int heigth = parent.getMeasuredHeight() / 5;
-
-        //Aplica esse tamanho no quadro do app
-        view.setLayoutParams(new ViewGroup.LayoutParams(width, heigth));
+        RecyclerView recyclerView = new RecyclerView(parent.getContext());
+        recyclerView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
         //Este comando devolve a view dentro do ViewHolder.
-        return new ViewHolder(view);
+        return new ViewHolder(recyclerView);
     }
 
     //Essa função vai ser a responsável por apresentar algum item na tela toda vez que for chamado pelo código, no caso ele entrega duas coisas, sendo elas: moldura (ViewHolder) e position (O número do aplicativo).
     @Override
-    public void onBindViewHolder (ViewHolder Holder, int position){
-        //Pega os dados atuais do aplicativo que está aparecendo na lista
-        AppInfo app = appsList.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        List<AppInfo> appsDaPagina = appsList.get(position);
 
-        //Adiciona o nome do aplicativo no TextView
-        Holder.nomeApp.setText(app.label);
+        holder.recyclerViewPagina.setLayoutManager(new GridLayoutManager(context, 4));
 
-        //Adiciona o ícone do aplicativo no ImageView (Utilizamos o Drawable por se tratar de um fator que é desenhavel)
-        Holder.iconeApp.setImageDrawable(app.icon);
-
-        //Essa função abaixo vai fazer com que o Launcher/Interface seja capaz de abrir os aplicativos assim que eles forem clicados.
-        //Adiciona a escuta do clique
-        Holder.itemView.setOnClickListener(v -> {
-            //Cria o caminho para abrir o aplicativo usando o ID (packageName) dele
-            Intent intent = v.getContext().getPackageManager().getLaunchIntentForPackage(app.packageName);
-
-            //Se o Android encontrar o aplicativo ele vai abrir
-            if (intent != null) {
-                v.getContext().startActivity(intent);
-            }
-        });
-    }
-
-    //Esse construtor vai servir para receber a lista de aplicativos que vão ser mostrados, no caso ele chama todos os aplicativos que estão dentro da lista, que automaticamente são todos os palicativos instalados dentro do celular.
-    public AppAdapter(List<AppInfo>appsList) {
-        this.appsList = appsList;
+        ItemAdapter innerAdapter = new ItemAdapter(appsDaPagina);
+        holder.recyclerViewPagina.setAdapter(innerAdapter);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        //Essas variáveis vão ser responsáveis por pedir o ícone e nome do aplicativo
-        ImageView iconeApp;
-        TextView nomeApp;
+        RecyclerView recyclerViewPagina;
 
-        public ViewHolder (View itemView) {
-            //O itemView é a parte "sólida"/"consolidada", ele é o que mantém o ícone e o nome do aplicativo juntos, então quando o Android chamar por determinado aplicativo específico ele vai ser a ferramenta que vai fazer eles aparecem juntos.
-
+        public ViewHolder(View itemView) {
             //É o comando que chama o construtor e se refere a classe pai, que nesse caso seria o RecyclerView.
             super(itemView);
+            recyclerViewPagina = (RecyclerView) itemView;
+        }
+    }
 
-            //Esses dois comandos estão sendo utilizados para chamar o ícone e o nome do aplicativo pelo ID deles, fazendo assim com que o itemView possa visualizar e continuar o processo de impressão deles na tela.
-            iconeApp = itemView.findViewById(R.id.iconeApp);
-            nomeApp = itemView.findViewById(R.id.nomeApp);
+    // Adapter interno para renderizar cada aplicativo individual dentro da página do ViewPager2
+    private class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
+        private List<AppInfo> itens;
 
+        public ItemAdapter(List<AppInfo> itens) {
+            this.itens = itens;
         }
 
+        @Override
+        public int getItemCount() {
+            return itens.size();
+        }
+
+        @Override
+        public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View view = inflater.inflate(R.layout.item_app, parent, false);
+
+            int width = parent.getMeasuredWidth() / 4;
+            int height = parent.getMeasuredHeight() / 5;
+            view.setLayoutParams(new ViewGroup.LayoutParams(width, height));
+
+            return new ItemViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ItemViewHolder holder, int position) {
+            AppInfo app = itens.get(position);
+
+            holder.nomeApp.setText(app.label);
+            holder.iconeApp.setImageDrawable(app.icon);
+
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = v.getContext().getPackageManager().getLaunchIntentForPackage(app.packageName);
+                if (intent != null) {
+                    v.getContext().startActivity(intent);
+                }
+            });
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+            android.widget.ImageView iconeApp;
+            android.widget.TextView nomeApp;
+
+            public ItemViewHolder(View itemView) {
+                super(itemView);
+                iconeApp = itemView.findViewById(R.id.iconeApp);
+                nomeApp = itemView.findViewById(R.id.nomeApp);
+            }
+        }
     }
 }

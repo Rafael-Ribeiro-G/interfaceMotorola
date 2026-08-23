@@ -5,33 +5,30 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="20dp"
-    android:clipToPadding="false"
     android:background="@android:color/transparent">
 
-    <androidx.recyclerview.widget.RecyclerView
-
-        android:id="@+id/appList"
-
+    <!-- Ocupa o topo da tela até o início da Dock -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="28dp"
-        android:paddingBottom="68dp"
+        android:paddingTop="20dp"
         android:clipToPadding="false"
-        android:scrollbars="none"
-        android:overScrollMode="never"
-        android:layout_marginBottom="40dp"
-
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="4"
-
-        android:orientation="horizontal"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/dockLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        />
+    <!-- Cria uma dock fixa que fica presa no fundo da tela com 100dp de altura -->
+    <LinearLayout
+        android:id="@+id/dockLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

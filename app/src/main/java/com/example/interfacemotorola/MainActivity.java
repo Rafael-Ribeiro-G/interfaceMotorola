@@ -4,15 +4,14 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +19,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     //O primeiro passo é criar todas as variáveis que vamos precisar chamar futuramente.
-    RecyclerView recyclerView; //É a estante do nosso XML
-    List<AppInfo> appsList; //É a lista onde vai estar presente todos os aplicativos instalados no celular.
+    ViewPager2 viewPager; //É a estante do nosso XML
+    List<List<AppInfo>> appsList; //É a lista onde vai estar presente todos os aplicativos instalados no celular.
     AppAdapter adapter; //É o responsável por estampar o ícone e nome do aplicativo.
+
+    //Implementação da variável do filtro de luz azul
+    View filtroLuzAzul;
+
+    private static final int APPS_POR_PAGINA = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +35,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Essa função vai funcionar
-        recyclerView = findViewById(R.id.appList);
+        viewPager = findViewById(R.id.viewPager);
 
-        // Otimizações para a rolagem não travar
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(40);
-
-        //Cria a grade com 5 linhas
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 5, GridLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-
-        //Permite que a página trave no lugar certo
-        PagerSnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(recyclerView);
+        if (viewPager.getChildAt(0) instanceof androidx.recyclerview.widget.RecyclerView) {
+            androidx.recyclerview.widget.RecyclerView recyclerViewInterno = (androidx.recyclerview.widget.RecyclerView) viewPager.getChildAt(0);
+            recyclerViewInterno.setHasFixedSize(true);
+            recyclerViewInterno.setItemViewCacheSize(40);
+        }
 
         //Essa função vai ter a função de
         appsList = new ArrayList<>();
@@ -69,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         //No comando abaixo vou chamar o get.packageManager para me entregar a lista de aplicativos que ele achou com aquele filtro montado anteriormente.
         List<ResolveInfo> appsBrutos = getPackageManager().queryIntentActivities(intent, 0);
 
+        List<AppInfo> listaTemporaria = new ArrayList<>();
+
         //Garante que a lista comece vazia para não duplicar ícones
         appsList.clear();
 
@@ -81,12 +81,18 @@ public class MainActivity extends AppCompatActivity {
 
             // Filtro para não mostrar o próprio Launcher na lista
             if (!packageName.equals(getPackageName())) {
-                appsList.add(new AppInfo(label, packageName, icon));
+                listaTemporaria.add(new AppInfo(label, packageName, icon));
             }
         }
 
+        // Divide a lista temporária em blocos de 20 apps por página
+        for (int i = 0; i < listaTemporaria.size(); i += APPS_POR_PAGINA) {
+            int fim = Math.min(i + APPS_POR_PAGINA, listaTemporaria.size());
+            appsList.add(new ArrayList<>(listaTemporaria.subList(i, fim)));
+        }
+
         //Agora irei avisar ao Adapter que a lista já está cheia.
-        adapter = new AppAdapter(appsList); //Avisa ao AppAdapter que a lista já está cheia.
-        recyclerView.setAdapter(adapter); //Avisa ao recyclerView que quando for necessário mostrar um ícone é preciso enviar para o adapter.
+        adapter = new AppAdapter(this, appsList); //Avisa ao AppAdapter que a lista já está cheia.
+        viewPager.setAdapter(adapter); //Avisa ao recyclerView que quando for necessário mostrar um ícone é preciso enviar para o adapter.
     }
 }
