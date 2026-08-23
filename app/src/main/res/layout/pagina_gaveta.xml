@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1E1E1E">
+
+    <!-- A lista vertical de apps da gaveta -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerGavetaPagina"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="true"
+        android:paddingTop="48dp"
+        android:paddingBottom="24dp" />
+
+</LinearLayout>

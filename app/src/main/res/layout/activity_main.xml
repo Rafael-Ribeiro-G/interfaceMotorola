@@ -17,16 +17,12 @@
             android:id="@+id/viewPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:paddingTop="60dp"
-            android:clipToPadding="false"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/dockLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Cria uma dock fixa no fundo da tela (altura ajustada para 100dp) -->
+        <!-- Cria uma dock fixa no fundo da tela (altura ajustada para 200dp) -->
         <LinearLayout
             android:id="@+id/dockLayout"
             android:layout_width="match_parent"
@@ -54,39 +50,5 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Implementação da Gaveta de Aplicativos (Inicia oculta no topo) -->
-    <LinearLayout
-        android:id="@+id/gavetaApps"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#1E1E1E"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:visibility="invisible">
-
-        <!-- Lista da Gaveta de Apps -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerGaveta"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp" />
-
-        <!-- Barrinha visual de puxar/fechar no fundo da gaveta (ID adicionado aqui) -->
-
-        <View
-            android:id="@+id/handleFecharGaveta"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="12dp"
-            android:background="@android:color/transparent" />
-
-    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
