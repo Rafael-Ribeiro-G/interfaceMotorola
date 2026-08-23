@@ -2,7 +2,9 @@ package com.example.interfacemotorola;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.View;
 
@@ -37,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         //Essa função vai funcionar
         viewPager = findViewById(R.id.viewPager);
 
+        //Referência da View do filtro no XAML
+        filtroLuzAzul = findViewById(R.id.filtroLuzAzul);
+
         if (viewPager.getChildAt(0) instanceof androidx.recyclerview.widget.RecyclerView) {
             androidx.recyclerview.widget.RecyclerView recyclerViewInterno = (androidx.recyclerview.widget.RecyclerView) viewPager.getChildAt(0);
             recyclerViewInterno.setHasFixedSize(true);
@@ -54,6 +59,45 @@ public class MainActivity extends AppCompatActivity {
 
         //A função abaixo está sendo utilizada para fazer a buscagem/pesquisa dos aplicativos.
         pegarApps();
+
+        verificarFiltroLuzAzul();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Faz o cálculo da cor ao voltar ao aplicativo
+        verificarFiltroLuzAzul();
+
+    }
+
+    //Função responsável por aplicar a cor amarelado conforme a hora do dia
+    private void verificarFiltroLuzAzul(){
+        Calendar calendar = Calendar.getInstance(); //Retorna a hora no formato 0-23
+        int HoraAtual = calendar.get(Calendar.HOUR_OF_DAY);
+
+        filtroLuzAzul.setVisibility(View.VISIBLE);
+
+        int corFiltro;
+
+        if(HoraAtual >= 8 && HoraAtual <= 18) {
+            //Adiciona o tom amarelado suave na tela
+            corFiltro = Color.parseColor("#1AF4D03F");
+        } else if(HoraAtual >= 18 && HoraAtual <= 21) {
+            //Adiciona o tom amarelado médio na tela
+            corFiltro = Color.parseColor("#1AFF9F00");
+        } else {
+            //Adiciona o tom amarelado mais forte na tela
+            corFiltro = Color.parseColor("#22E65100");
+        }
+
+        filtroLuzAzul.setBackgroundColor(corFiltro);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(corFiltro);
+            getWindow().setNavigationBarColor(corFiltro);
+        }
     }
 
     //A função abaixo vai ter a responsabilidade de buscar os aplicativos.
