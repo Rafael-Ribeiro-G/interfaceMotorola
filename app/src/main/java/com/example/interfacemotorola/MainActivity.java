@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     AppAdapter adapter; //É o responsável por estampar o ícone e nome do aplicativo.
 
     //Implementação da variável do filtro de luz azul
-    View filtroLuzAzul;
+    //View filtroLuzAzul;
 
     //Componentes da Dock
     LinearLayout dockLayout; // Dock fixa para 4 apps no rodapé
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Referência da View do filtro no XAML
-        filtroLuzAzul = findViewById(R.id.filtroLuzAzul);
+        //filtroLuzAzul = findViewById(R.id.filtroLuzAzul);
 
         // Referência para a Dock
         dockLayout = findViewById(R.id.dockLayout);
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         //A função abaixo está sendo utilizada para fazer a buscagem/pesquisa dos aplicativos.
         pegarApps();
 
-        verificarFiltroLuzAzul();
+        //verificarFiltroLuzAzul();
     }
 
     // Função para esconder ou exibir os botões de navegação e barra de status do Android
@@ -140,33 +140,33 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         //Faz o cálculo da cor ao voltar ao aplicativo
-        verificarFiltroLuzAzul();
+        //verificarFiltroLuzAzul();
     }
 
     //Função responsável por aplicar a cor amarelado conforme a hora do dia
-    private void verificarFiltroLuzAzul(){
-        Calendar calendar = Calendar.getInstance(); //Retorna a hora no formato 0-23
-        int HoraAtual = calendar.get(Calendar.HOUR_OF_DAY);
+    //private void verificarFiltroLuzAzul(){
+        //Calendar calendar = Calendar.getInstance(); //Retorna a hora no formato 0-23
+        //int HoraAtual = calendar.get(Calendar.HOUR_OF_DAY);
 
-        if (filtroLuzAzul != null) {
-            filtroLuzAzul.setVisibility(View.VISIBLE);
+        //if (filtroLuzAzul != null) {
+            //filtroLuzAzul.setVisibility(View.VISIBLE);
 
-            int corFiltro;
+            //int corFiltro;
 
-            if (HoraAtual >= 8 && HoraAtual < 18) {
+            //if (HoraAtual >= 8 && HoraAtual < 18) {
                 //Adiciona o tom amarelado suave na tela
-                corFiltro = Color.parseColor("#1AF4D03F");
-            } else if (HoraAtual >= 18 && HoraAtual < 21) {
+                //corFiltro = Color.parseColor("#1AF4D03F");
+            //} else if (HoraAtual >= 18 && HoraAtual < 21) {
                 //Adiciona o tom amarelado médio na tela
-                corFiltro = Color.parseColor("#1AFF9F00");
-            } else {
+                //corFiltro = Color.parseColor("#1AFF9F00");
+            //} else {
                 //Adiciona o tom amarelado mais forte na tela
-                corFiltro = Color.parseColor("#22E65100");
-            }
+                //corFiltro = Color.parseColor("#22E65100");
+            //}
 
-            filtroLuzAzul.setBackgroundColor(corFiltro);
-        }
-    }
+            //filtroLuzAzul.setBackgroundColor(corFiltro);
+        //}
+    //}
 
     //A função abaixo vai ter a responsabilidade de buscar os aplicativos.
     private void pegarApps() {
