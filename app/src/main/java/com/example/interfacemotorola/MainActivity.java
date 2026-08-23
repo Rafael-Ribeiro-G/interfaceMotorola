@@ -10,15 +10,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.viewpager2.widget.ViewPager2;
+
 public class MainActivity extends AppCompatActivity {
 
+
     //O primeiro passo é criar todas as variáveis que vamos precisar chamar futuramente.
-    RecyclerView recyclerView; //É a estante do nosso XML
+    ViewPager2 viewPager; //É a estante do nosso XML
     List<AppInfo> appsList; //É a lista onde vai estar presente todos os aplicativos instalados no celular.
     AppAdapter adapter; //É o responsável por estampar o ícone e nome do aplicativo.
 
@@ -29,8 +34,12 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        //Essa função vai funcionar
-        recyclerView = findViewById(R.id.appList);
+        viewPager = findViewById(R.id.viewPager);
+
+        // REMOVA as linhas: .setHasFixedSize, .setItemViewCacheSize, etc.
+        // O ViewPager2 gerencia a memória de um jeito diferente e automático.
+
+        appsList = new ArrayList<>();
 
         //Essa função vai ter a função de
         appsList = new ArrayList<>();
@@ -68,6 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
                 //Agora irei avisar ao Adapter que a lista já está cheia.
                 adapter = new AppAdapter(appsList); //Avisa ao AppAdapter que a lista já está cheia.
-                recyclerView.setAdapter(adapter); //Avisa ao recyclerView que quando for necessário mostrar um ícone é preciso enviar para o adapter.
+                viewPager.setAdapter(adapter); //Avisa ao recyclerView que quando for necessário mostrar um ícone é preciso enviar para o adapter.
         }
 }

@@ -5,30 +5,23 @@
     android:layout_width="match_parent"
     android:id="@+id/main"
     android:layout_height="match_parent"
-    android:paddingTop="40dp"
+    android:paddingTop="20dp"
     android:clipToPadding="false"
     android:background="@android:color/transparent">
 
-    <!-- Os comandos "android:layout_widht e laytout_height" servem como um adaptador para os diferentes tamanhos de tela, quando igualados a zero "0" se adaptam a telas de dimensões diferentes, no caso telas maiores e menores -->
-    <!-- O comando app:layoutManager... serve para organizar os itens do recyclerView em Grade -->
-    <!-- (android:clipToPadding="false") Faz com que o itens passem por trás da barra de notificações de forma suave sem serem cortados -->
-    <!-- Já o comando spanCount serve para falar em quantos itens o Grade vai ser divida, no caso em 4, caso esse número for alterado o número de itens na horinzontal também vão ser diferentes -->
-        <androidx.recyclerview.widget.RecyclerView
+    <!-- Troquei o RecyclerView pelo ViewPager2 mantendo seus ajustes de layout -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="28dp"
+        android:clipToPadding="false"
+        android:paddingBottom="68dp"
+        android:overScrollMode="never"
+        android:layout_marginBottom="40dp" />
 
-            android:id="@+id/appList"
-
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="4"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:paddingTop="48dp"
-            android:clipToPadding="false"
-            android:paddingBottom="48dp"
-
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
